@@ -1,0 +1,5 @@
+*.vscode*
+settings.json
+www/settings.php
+www/phpMyAdmin*
+backup.sql
