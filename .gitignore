@@ -1,5 +1,3 @@
-*.vscode*
-settings.json
 settings.php
 phpMyAdmin*
 backup.sql

@@ -2,7 +2,7 @@
 
 this is a base setup for my home automation and similar projects that i'm running on raspberry pis. the folder setup is to help me keep stuff organized and also because the folders have pretty icons in visual studio code.
 
-i'm going to try to get the basic features i want for the different pis. and i'm probably going to see about forking this repo for the different projects that will use this base. 
+i'm going to try to get the basic features i want for the different pis. and i'm probably going to see about forking this repo for the different projects that will use this base.
 
 most of this project is currently private but my goal is to make as much of it available as open source and try to include instructions for setting up the different raspberry pi devices.
 
