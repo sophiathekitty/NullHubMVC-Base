@@ -1,6 +1,6 @@
 *.vscode*
 settings.json
-www/settings.php
-www/phpMyAdmin*
+settings.php
+phpMyAdmin*
 backup.sql
 extentions/*
