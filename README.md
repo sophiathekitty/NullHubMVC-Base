@@ -10,7 +10,94 @@ i apologize for anybody looking for something useful now... i'll probably focus 
 
 ## Setup
 
-this is where i'll ad the basic setup steps for the raspberry pi...
+first run the raspberry pi config wizard and get everything setup so you can ssh into the pi and it's connected to your network
+
+```bash
+sudo raspi-config
+```
+
+### All in One super command to install everything
+
+this is what i've used to setup a few raspberry pi zeros...
+
+```bash
+sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install apache2 -y && sudo a2enmod rewrite && sudo service apache2 restart && sudo apt-get install php -y && sudo apt-get install libapache2-mod-php -y && sudo apt-get install mariadb-server -y && sudo apt-get install php-mysql -y && sudo service apache2 restart && sudo apt-get install python -y && sudo apt-get install python-serial -y && sudo apt-get install python-serial -y && sudo pip install urllib && sudo ln -s /var/www/html www && sudo chown -R pi:pi /var/www/html && sudo chmod 777 /var/www/html
+```
+
+### Individual commands
+
+```bash
+sudo apt-get update
+```
+```bash
+sudo apt-get upgrade -y
+```
+```bash
+sudo apt-get install apache2 -y
+```
+```bash
+sudo a2enmod rewrite
+```
+```bash
+sudo service apache2 restart
+```
+```bash
+sudo apt-get install php -y
+```
+```bash
+sudo apt-get install libapache2-mod-php -y
+```
+```bash
+sudo apt-get install mariadb-server -y
+```
+```bash
+sudo apt-get install php-mysql -y
+```
+```bash
+sudo service apache2 restart
+```
+```bash
+sudo apt-get install python -y
+```
+```bash
+sudo apt-get install python-serial -y
+```
+```bash
+sudo apt-get install python-pip -y
+```
+```bash
+sudo pip install urllib
+```
+```bash
+sudo ln -s /var/www/html www
+```
+```bash
+sudo chown -R pi:pi /var/www/html
+```
+```bash
+sudo chmod 777 /var/www/html
+```
+
+### Setup the mysql database
+
+```bash
+sudo mysql -u root
+```
+```mysql
+[MariaDB] use mysql;
+[MariaDB] update user set plugin='' where User='root';
+[MariaDB] flush privileges;
+[MariaDB] \q
+```
+
+This needs to be followed by the following command:
+```bash
+mysql_secure_installation
+```
+
+```bash
+sudo ln -s /var/www/html www && sudo chown -R pi:pi www && sudo chmod 777 www
+```
 
 ## Tools
 
