@@ -127,7 +127,7 @@ mysql_secure_installation
 sudo crontab -e
 ```
 
-```crontab
+```Apache config
 1 * * * * sh /var/www/html/gitpull.sh
 #2 * * * * sh /var/www/html/plugins/NullSensors/gitpull.sh
 #3 * * * * sh /var/www/html/plugins/NullWeather/gitpull.sh
