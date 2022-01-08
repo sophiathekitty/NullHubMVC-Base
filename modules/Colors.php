@@ -1,60 +1,82 @@
 <?php
+/**
+ * gets an organized pallet of colors
+ * @return array json array of color pallets
+ */
 function FullColorPallet(){
     $pallet = [];
-    $pallet['display_default'] = LoadColor('display_default');
-    $pallet['clock'] = ClockColorPallet();
-    $pallet['weather'] = WeatherColorPallet();
-    $pallet['stoner'] = StonerColorPallet();
-    $pallet['strains'] = StrainsColorPallet();
+    $colors = new Colors();
+    $pallets = $colors->PalletsList();
+    foreach($pallets as $p){
+        $pallet[$p] = [];
+        $pal = $colors->LoadPallet($p);
+        foreach($pal as $c){
+            if(strpos($c['id'],"_") > 0){
+                list($key, $index) = explode("_",$c['id']);
+                if($index == "max") $index = "1";
+                if($index == "min") $index = "0";
+                if(isset($pallet[$p][$key])){
+                    $pallet[$p][$key][$index] = $c['color'];
+                } else {
+                    $pallet[$p][$key] = [];
+                    $pallet[$p][$key][$index] = $c['color'];
+                }
+            } else {
+                $pallet[$p][$c['id']] = $c['color'];
+            }
+        }
+    }
     return $pallet;
 }
-function WeatherColorPallet(){
+/**
+ * a parsed color pallet
+ * @param string $p the name of the pallet
+ * @return array a json array for a color pallet
+ */
+function ColorPalletStamp($p){
     $pallet = [];
-    $pallet['temperature'] = TemperatureColorPallet();
-    $pallet['humidity'] = [LoadColor('hum_min'),LoadColor('hum_max')];
-    $pallet['wind'] = [LoadColor('wind_min'),LoadColor('wind_max')];
+    $colors = new Colors();
+    $pal = $colors->LoadPallet($p);
+    foreach($pal as $c){
+        if(strpos($c['id'],"_") > 0){
+            list($key, $index) = explode("_",$c['id']);
+            if($index == "max") $index = "1";
+            if($index == "min") $index = "0";
+            if(isset($pallet[$key])){
+                $pallet[$key][$index] = $c['color'];
+            } else {
+                $pallet[$key] = [];
+                $pallet[$key][$index] = $c['color'];
+            }
+        } else {
+            $pallet[$c['id']] = $c['color'];
+        }
+    }
     return $pallet;
 }
-function TemperatureColorPallet(){
-    $pallet=[];
-    $pallet[] = LoadColor('temp_0');
-    $pallet[] = LoadColor('temp_1');
-    $pallet[] = LoadColor('temp_2');
-    $pallet[] = LoadColor('temp_3');
-    $pallet[] = LoadColor('temp_4');
-    $pallet[] = LoadColor('temp_5');
-    $pallet[] = LoadColor('temp_6');
-    $pallet[] = LoadColor('temp_7');
-    $pallet[] = LoadColor('temp_8');
-    $pallet[] = LoadColor('temp_9');
-    $pallet[] = LoadColor('temp_10');
-    $pallet[] = LoadColor('temp_11');
-    return $pallet;
-}
-function StonerColorPallet(){
-    return [
-        'fourOhFour'=>LoadColor('fourOhFour'),
-        'fourTwenty'=>LoadColor('fourTwenty'),
-        'sevenTen'=>LoadColor('sevenTen')
-    ];
-}
-function StrainsColorPallet(){
-    return [
-        'indica'=>LoadColor('indica'),
-        'indicaHybrid'=>LoadColor('indicaHybrid'),
-        'hybrid'=>LoadColor('hybrid'),
-        'sativaHybrid'=>LoadColor('sativaHybrid'),
-        'sativa'=>LoadColor('sativa')
-    ];
-}
-function ClockColorPallet(){
-    return [
-        'am'=>LoadColor('am'),
-        'pm'=>LoadColor('pm'),
-        'oneTwoThreeFour'=>LoadColor('oneTwoThreeFour'),
-        'elevenEleven'=>LoadColor('elevenEleven'),
-        'fourFiveSix'=>LoadColor('fourFiveSix'),
-        'oneOneOne'=>LoadColor('oneOneOne')
-    ];
+
+function SyncColorPallets(){
+    if(Servers::IsHub()) return;
+    $pallets = ServerRequests::LoadHubJSON("/api/colors/?pallet=1");
+    foreach($pallets['pallet'] as $pallet => $colors){
+        if(is_array($colors)) {
+            foreach($colors as $id => $color){
+                if(is_array($color)){
+                    if(count($color) == 2){
+                        Colors::SetColor($id."_min",$color[0],$pallet);
+                        Colors::SetColor($id."_max",$color[1],$pallet);
+                    } else {
+                        for($i = 0; $i < count($color); $i++){
+                            Colors::SetColor($id."_".$i,$color[$i],$pallet);
+                        }
+                    }
+                } else {
+                    Colors::SetColor($id,$color,$pallet);
+                }
+            }
+        } else {
+            Colors::SetColor($pallet,$colors);
+        }
+    }
 }
 ?>

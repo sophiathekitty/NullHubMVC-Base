@@ -1,0 +1,12 @@
+main section#weather.main,
+main section#floors.main,
+main .main {
+    display: none;
+}
+main[view="rooms"] section#floors.main {
+    display: flex;
+}
+main[view="weather"] section#weather.main {
+    display: flex;
+    flex-direction: column;
+}
