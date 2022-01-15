@@ -1,6 +1,0 @@
-{
-    "name":"room",
-    "type":"model",
-    "api":"/api/rooms",
-    "item_id":"id"
-}
